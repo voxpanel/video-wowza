@@ -1,0 +1,12 @@
+#!/bin/bash
+# Script para calcular o uso do FTP nos streamings usando o pure-quotacheck
+
+# Carrega lista com os streamings
+for login in `find /home/streaming -maxdepth 1 -type d | cut -d / -f 4 | sort`;
+do
+
+/usr/sbin/pure-quotacheck -u streaming -d /home/streaming/$login
+
+echo $login
+
+done

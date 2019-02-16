@@ -1,0 +1,5 @@
+#!/bin/bash
+/usr/bin/java -cp /usr/local/WowzaMediaServer JMXCommandLine -jmx service:jmx:rmi://localhost:8084/jndi/rmi://localhost:8085/jmxrmi -user admin -pass admin shutdownAppInstance $1
+/usr/local/WowzaMediaServer/desativar $1
+/usr/local/WowzaMediaServer/ativar $1 $2 $3 $4 $5
+/usr/bin/java -cp /usr/local/WowzaMediaServer JMXCommandLine -jmx service:jmx:rmi://localhost:8084/jndi/rmi://localhost:8085/jmxrmi -user admin -pass admin startAppInstance $1

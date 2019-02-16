@@ -1,0 +1,22 @@
+#!/bin/bash
+# @desativar - Script para remover uma aplicacao
+
+if [ $# = 0 ]; then
+
+echo
+echo "Modo de Uso: /usr/local/WowzaMediaServer/desativar LOGIN"
+echo
+exit
+
+fi
+
+# Variaveis gerais
+login=$1
+
+/usr/bin/java -cp /usr/local/WowzaMediaServer JMXCommandLine -jmx service:jmx:rmi://localhost:8084/jndi/rmi://localhost:8085/jmxrmi -user admin -pass admin shutdownAppInstance $login
+rm -rfv /usr/local/WowzaMediaServer/conf/$login
+rm -rfv /usr/local/WowzaMediaServer/applications/$login
+
+sed -i "/$login/d" /usr/local/WowzaMediaServer/lista-streamings.txt
+
+echo concluido

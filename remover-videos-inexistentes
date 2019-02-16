@@ -1,0 +1,29 @@
+#!/bin/bash
+# Script para remover videos inexistentes das playlists de todos os streamings
+
+# Muda prioridade de execussao
+renice -20 $$
+
+# Busca os videos inexistentes nos logs do Wowza
+grep 'java.io.FileNotFoundException' /usr/local/WowzaMediaServer/logs/wowzamediaserver_access.log | awk {'print $11'} | sort | uniq > /tmp/lista-videos-inexistentes-$$.list
+
+# Lista os videos inexistentes encontrados
+for video in `cat /tmp/lista-videos-inexistentes-$$.list`;
+do
+
+login=`echo $video | cut -d / -f 4`
+arquivo=`echo $video | cut -d / -f "5 6" | cut -d / -f 2`
+playlist="/home/streaming/$login/playlists_agendamentos.smil"
+
+echo "-Removendo video $video ..."
+echo "-Playlist $playlist"
+
+sed -i "/$arquivo/d" $playlist
+
+echo
+
+done
+
+rm -f /tmp/lista-videos-inexistentes-$$.list
+
+echo "Done!"

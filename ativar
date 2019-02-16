@@ -1,0 +1,36 @@
+#!/bin/bash
+# @ativar - Script para configurar uma aplicacao
+
+if [ $# = 0 ]; then
+
+echo
+echo "Modo de Uso: /usr/local/WowzaMediaServer/ativar LOGIN SENHA BITRATE ESPECTADORES"
+echo
+exit
+
+fi
+
+# Variaveis gerais
+login=$1
+senha=$2
+bitrate=$3
+espectadores=$4
+aplicacao=$5
+
+mkdir -v /usr/local/WowzaMediaServer/conf/$login
+
+mkdir -v /usr/local/WowzaMediaServer/applications/$login
+
+cp -v /usr/local/WowzaMediaServer/templates/Application-$aplicacao.xml /usr/local/WowzaMediaServer/conf/$login/Application.xml
+
+perl -i -p -e "s/LOGIN/$login/" /usr/local/WowzaMediaServer/conf/$login/Application.xml
+perl -i -p -e "s/BITRATE/$bitrate/" /usr/local/WowzaMediaServer/conf/$login/Application.xml
+perl -i -p -e "s/ESPECTADORES/$espectadores/" /usr/local/WowzaMediaServer/conf/$login/Application.xml
+
+echo '*=${Stream.Name}' > /usr/local/WowzaMediaServer/conf/$login/aliasmap.stream.txt
+echo "$login=\${Stream.Name}" > /usr/local/WowzaMediaServer/conf/$login/aliasmap.play.txt
+echo "$login $senha" > /usr/local/WowzaMediaServer/conf/$login/publish.password
+
+echo "`date "+%d/%m/%Y %T"` $login" >> /usr/local/WowzaMediaServer/lista-streamings.txt
+
+echo concluido
